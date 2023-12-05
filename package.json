@@ -1,0 +1,24 @@
+{
+  "name": "historiasincriveis",
+  "version": "1.0.0",
+  "description": "Chat para jogar o RPG Histórias Incriveis",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Stenio V. Medeiros",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dns": "^0.2.2",
+    "dotenv": "^16.3.1",
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "fs": "^0.0.1-security",
+    "http": "^0.0.1-security",
+    "https": "^1.0.0",
+    "os": "^0.1.2",
+    "path": "^0.12.7",
+    "socket.io": "^4.7.2"
+  }
+}

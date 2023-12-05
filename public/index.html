@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description"
+        content="Plataforma de Chat para jogar o Sistema de RPG Histórias Incríveis, com video e rolagem de dados!" />
+    <title>Chat para jogar o RPG Histórias Incríveis</title>
+    <script src="https://cdn.socket.io/4.4.1/socket.io.min.js"
+        integrity="sha384-fKnu0iswBIqkjxrhQCTZ7qlLHOFEgNkRmK2vaO/LbTZSXdJfAu6ewRBdwHPhBo/H" crossorigin="anonymous">
+        </script>
+    <script src="https://unpkg.com/peerjs@1.5.1/dist/peerjs.min.js"></script>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+    <div id="modal" class="modal">
+        <form id="modalform">
+            <input type="text" id="inusername" name="username" placeholder="Digite seu nome" required />
+            <label for="typenarrador">
+                <input type="radio" id="typenarrador" name="typeuser" value="narrador" checked />
+                Narrador
+            </label>
+            <label for="typeplayer">
+                <input type="radio" id="typeplayer" name="typeuser" value="jogador" />
+                Jogador
+            </label>
+            <div id="narrinfos">
+                <label><b>Modo de jogo</b></label>
+                <label for="typeorigindice">
+                    <input type="radio" id="typeorigindice" name="typegame" value="origindice" checked />
+                    Original (d6, d8, d10 e d12)
+                </label>
+                <label for="typesimpledice">
+                    <input type="radio" id="typesimpledice" name="typegame" value="simpledice" />
+                    Simplificado (d6)
+                </label>
+                <label for="typefulldice">
+                    <input type="radio" id="typefulldice" name="typegame" value="fulldice" />
+                    Avançado (d4, d6, d8, d10, d12 e d20)
+                </label>
+            </div>
+            <div id="caracterinfos" class="hiddemdiv">
+                <label><b>Narrador</b></label>
+                <input type="text" id="narradorname" name="narradorname" placeholder="Nome do seu narrador" />
+                <label><b>Personagem</b></label>
+                <input type="text" id="caractername" name="caractername" placeholder="Nome do seu personagem" />
+                <label><b>Habilidade 1 (d12):</b></label>
+                <input type="text" id="skillD12" name="skillD12" placeholder="Em que você é bom?" />
+                <label><b>Habilidade 2 (d10):</b></label>
+                <input type="text" id="skillD10" name="skillD10" placeholder="Em que você é bom?" />
+                <label><b>Habilidade 3 (d8):</b></label>
+                <input type="text" id="skillD8" name="skillD8" placeholder="Em que você é bom?" />
+                <label><b>Habilidade 4 (d6):</b></label>
+                <input type="text" id="skillD6" name="skillD6" placeholder="Em que você é bom?" />
+                <label><b>Descrição:</b></label>
+                <textarea id="decriptcaracter" name="decriptcaracter"
+                    placeholder="Fale sobre o seu personagem"></textarea>
+            </div>
+            <button type="submit" id="submituser">Entrar</button>
+        </form>
+    </div>
+    <h2>RPG Histórias Incríveis</h2>
+    <main id="mainusers"></main>
+    <div>
+        <button class="mediabt" type="submit">
+            <img src="microphone.svg" alt="Liga e desliga o aúdio" />
+        </button>
+        <button class="mediabt" type="submit">
+            <img src="camera.svg" alt="liga e desliga o video" />
+        </button>
+    </div>
+    <form id="chat">
+        <input type="hidden" id="username" name="username" />
+        <div id="messages" class="messages"></div>
+        <div>
+            <input type="text" id="message" name="message" placeholder="Digite sua mensagem" />
+            <button type="submit" id="submitbt">Enviar</button>
+        </div>
+        <h3>Rolagem</h3>
+        <div id="testesdices">
+            <button class="dicebt optional hiddemdiv" type="submit">
+                <span>Ação fácil</span>
+                <img src="d20.svg" alt="dado d20" />
+            </button>
+            <button class="dicebt origdice" type="submit">
+                <span>D12</span>
+                <img src="d12.svg" alt="dado d12" />
+            </button>
+            <button class="dicebt origdice" type="submit">
+                <span>D10</span>
+                <img src="d10.svg" alt="dado d10" />
+            </button>
+            <button class="dicebt origdice" type="submit">
+                <span>D8</span>
+                <img src="d8.svg" alt="dado d8" />
+            </button>
+            <button class="dicebt origdice" type="submit">
+                <span>D6</span>
+                <img src="d6.svg" alt="dado d6" />
+            </button>
+            <button class="dicebt optional hiddemdiv" type="submit">
+                <span>Ação difícil</span>
+                <img src="d4.svg" alt="dado d4" />
+            </button>
+            <button id="OneDicebt" class="dicebt hiddemdiv" type="submit">
+                <span>Ação</span>
+                <img src="OneDice.svg" alt="dado d6" />
+            </button>
+        </div>
+    </form>
+    <button id="instruct">Instruções</button>
+    <iframe id="framehelp" src="help.html" class="displaynone"></iframe>
+    <footer>
+        <img id="myimg" class="myimg" src="https://steniovm.github.io/steniovm/relatividade/imgs/stenio.jpg"
+            alt="Minha Foto">
+        <div id="divinfo" class="divinfo">
+            <h2>Baseado na obra de <i>Martin Lloyd <a href="https://amazing-tales.net/" target="_blank">Amazing
+                        Tales</a></i></h2>
+            <h2>Versão brasileira pela <i>Editora Chá - <a href="https://editoracha.com.br/produto/historias-incriveis/"
+                        target="_blank">Histórias Incríveis</a></i></h2>
+            <span>Autor: Stênio Vinicios de Medeiros</span>
+            <span>Portifolio: <a href="https://steniovm.github.io/steniovm/"
+                    alt="Meu portifolio de projetos">https://steniovm.github.io/steniovm/</a></span>
+            <span>Email: <a href="mailto:steniovm@gmail.com" alt="Meu email">steniovm@gmail.com</a></span>
+        </div>
+    </footer>
+    <div id="disqus_thread"></div>
+    <script>
+        /**
+        *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+        *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+        /*
+        var disqus_config = function () {
+        this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+        };
+        */
+        (function () { // DON'T EDIT BELOW THIS LINE
+            var d = document, s = d.createElement('script');
+            s.src = 'https://guaxinimonline.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by
+            Disqus.</a></noscript>
+    <script id="dsq-count-scr" src="//guaxinimonline.disqus.com/count.js" async></script>
+</body>
+<script type="text/javascript" src="script.js"></script>
+
+</html>

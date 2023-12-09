@@ -244,7 +244,11 @@ function showdatauser(datauser) {
   if (datauser.typeuser === "narrador"){
     newuser.classList.add('divnarrador');
   }
-  newuser.title = datauser.decriptcaracter || "";
+  newuser.title = `${datauser.decriptcaracter || ""}
+  D12: ${datauser.skillD12 || ""}
+  D10: ${datauser.skillD10 || ""}
+  D8: ${datauser.skillD8 || ""}
+  D6: ${datauser.skillD6 || ""}`
   newuser.innerHTML = `<span class="showusername">${datauser.username || ""}</span>
             <label class="caracterinfo ${
               datauser.typeuser === "narrador" ? "hiddemdiv" : ""

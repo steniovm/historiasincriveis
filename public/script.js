@@ -98,25 +98,30 @@ function typegamedef(){
 //recebe usuario criado no servidor
 function createuser(data){
   data.videoconected = false;//define que o streamer de video está desconectado
-  //console.log(data);
   //caso o usuário sejá o proprio jogador atualiza perfil
   if (data.username === userdata.username){
-    userdata.playnumber = data.playnumber;
-    userdata.sid = data.sid;
-    userdata.room = data.room;
-    skillsnames[1].innerHTML = data.skillD12;
-    skillsnames[2].innerHTML = data.skillD10;
-    skillsnames[3].innerHTML = data.skillD8;
-    skillsnames[4].innerHTML = data.skillD6;
     if (data.typeuser === "narrador") {
+      userdata.playnumber = data.playnumber;
+      userdata.sid = data.sid;
+      userdata.room = data.room;
+      skillsnames[1].innerHTML = data.skillD12;
+      skillsnames[2].innerHTML = data.skillD10;
+      skillsnames[3].innerHTML = data.skillD8;
+      skillsnames[4].innerHTML = data.skillD6;
       userdata.status = data.status;
       renderMessage({
         author: "",
         message: `Bem vindo ao jogo Narrador <strong>${data.username}</strong>, convide três jogadores para iniciar sua aventura pelo link <a href="${location.origin + '?narrador=' +userdata.narradorname}" target="_blank">${location.origin + '?narrador=' +userdata.narradorname}</a> .`,
       });
-      //console.log(userdata.typegame);
       typegamedef();
     }else if (data.status.narrador && data.status.user && data.status.vaga){
+      userdata.playnumber = data.playnumber;
+      userdata.sid = data.sid;
+      userdata.room = data.room;
+      skillsnames[1].innerHTML = data.skillD12;
+      skillsnames[2].innerHTML = data.skillD10;
+      skillsnames[3].innerHTML = data.skillD8;
+      skillsnames[4].innerHTML = data.skillD6;
       userdata.status = true;
       renderMessage({
         author: "",
@@ -124,6 +129,15 @@ function createuser(data){
       });
     }else{
       userdata.status = false;
+      if(!data.status.narrador){
+        renderMessage({author:"",message:`O Narrador <strong>${data.narradorname}</strong> está offline, verifique o nome e a disponibilidade do seu narrador e tente novamente.`});
+      }
+      if(!data.status.vaga){
+        renderMessage({author:"",message:`O Narrador <strong>${data.narradorname}</strong> está com a sala lotada, verifique a disponibilidade do seu narrador e tente novamente.`});
+      }
+      if(!data.status.user){
+        renderMessage({author:"",message:`Na sala do Narrador <strong>${data.narradorname}</strong> já existe um usuário com nome <strong>${data.username}</strong> tente novamente com outro nome de usuário.`});
+      }
     }
   }else{
     renderMessage({
@@ -132,18 +146,23 @@ function createuser(data){
     });
     if (data.typeuser === "narrador"){
       userdata.typegame = data.typegame;
-      //console.log(userdata.typegame);
       typegamedef();
     }
   }
   //salva usuario na memória local
-  if (!users[data.username]){
-    users[data.username] = data;
-    showdatauser(data);
-  }
-  if (data.username === userdata.username){
-    videoinit(data.username);
-    pingpong();
+  if (userdata.status){
+    if (!users[data.username]){
+      users[data.username] = data;
+      showdatauser(data);
+    }
+    if (data.username === userdata.username){
+      videoinit(data.username);
+      pingpong();
+    }
+  }else{
+    setTimeout(()=>{
+      modal.classList.remove("hiddemdiv");//mostra o modal do form da pagina
+    },3000);
   }
 }
 //recebe mensagens previas (desativado)

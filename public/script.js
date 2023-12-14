@@ -35,6 +35,7 @@ const skillsnames = document.querySelectorAll('.dicebt>span');
 const caracterinfosinput = document.querySelectorAll('#caracterinfos input');
 const optionaldice = document.querySelectorAll('.optional');
 const origdice = document.querySelectorAll('.origdice');
+const savedcaracters = document.getElementById("savedcaracters");
 //encontra porta de comunicação
 const PORT =
   location.protocol === "https:" ? 443 : location.port ? location.port : 3000;
@@ -73,6 +74,53 @@ async function configConections(){
 function connectopen(id){
   userdata.pid = id;
   //console.log('My peer ID:', id);
+}
+//lê personagens salvos no localStorage
+readSavedCaracters();
+function readSavedCaracters(){
+  chars = JSON.parse(localStorage.getItem('chars')) || {};
+  if (Object.keys(chars).length) {
+    savedcaracters.classList.remove('hiddemdiv');
+    Object.keys(chars).forEach(key => {
+      const btuser = document.createElement('div');
+      btuser.classList.add('savedchar');
+      btuser.innerHTML = key;
+      btuser.title = "Carregar "+key;
+      const delbt = document.createElement('button');
+      delbt.classList.add('delbt');
+      delbt.innerHTML = "X";
+      btuser.title = "Remover "+key;
+      btuser.appendChild(delbt);
+      btuser.addEventListener('click', ()=>{
+        caractername.value = key;
+        skillD12.value = chars[key].skillD12;
+        skillD10.value = chars[key].skillD10;
+        skillD8.value = chars[key].skillD8;
+        skillD6.value = chars[key].skillD6;
+        decriptcaracter.innerHTML = chars[key].decript;
+      });
+      delbt.addEventListener('click',()=>{
+        delete chars[key];
+        btuser.remove();
+        savelocalstorage();
+      });
+      savedcaracters.appendChild(btuser);
+    });
+  }
+}
+//salva personagem no localStorage
+function savecaracter(data){
+  chars[data.get("caractername")] = {
+    'skillD12': data.get("skillD12"),
+    'skillD10': data.get("skillD10"),
+    'skillD8': data.get("skillD8"),
+    'skillD6': data.get("skillD6"),
+    'decript':data.get("decriptcaracter")
+  };
+  savelocalstorage();
+}
+function savelocalstorage(){
+  localStorage.setItem('chars',JSON.stringify(chars));
 }
 function typegamedef(){
   switch (userdata.typegame) {
@@ -243,13 +291,16 @@ modalform.addEventListener("submit", (ev) => {
     }else if (data.get("typeuser") === "jogador"){//caso o usuario seja um jogador
       //console.log('usuario jogador');
     }
-    console.log(userdata);
     try {
       socket.emit("sendUser", userdata);
       renderMessage({ author: "", message: "<strong>Bem Vindo ao Histórias Incríveis</strong>" });
     } catch (error) {
       console.log(error);
       modal.classList.remove("hiddemdiv");//retorna o modal do form para a pagina
+    }
+    //salva personagem no localStorage
+    if (data.get("caractername") !== ""){
+      savecaracter(data);
     }
   }else{
     alert('falha de acesso, verifique sua conexão com internet e recarregue a página');
@@ -474,11 +525,3 @@ async function receivedpong(pingtime){
   }
 }
 
-
-/*
-verificar se <abbr></abbr> é necessario pra usar o atributo title
-
-colocar os nomes das habilidades nos botões
-
-incluir modo simplificado somente do d6
-*/

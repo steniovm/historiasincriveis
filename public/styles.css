@@ -218,13 +218,27 @@ td{
   border-radius: 1em;
   max-width: 150px;
 }
-
-#disqus_thread {
-  width: 100%;
+.savedchar {
+  background-color: #9ea;
+  border: solid 1px green;
+  border-radius: 0.5em;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  padding-left: 1em;
 }
-
+.delbt{
+  width: auto;
+  color: red;
+  text-shadow: 1px 1px black, -1px -1px black, 1px -1px black, -1px 1px black;
+}
 #testesdices{
   display: flex;
   flex-wrap: wrap;
   justify-content: space-evenly;
 }
+
+#disqus_thread {
+  width: 100%;
+}
+

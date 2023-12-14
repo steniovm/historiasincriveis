@@ -207,7 +207,7 @@ function createuser(data){
       videoinit(data.username);
       pingpong();
     }
-  }else{
+  }else if(userdata.status===false && data.username === userdata.username){
     setTimeout(()=>{
       modal.classList.remove("hiddemdiv");//mostra o modal do form da pagina
     },3000);
